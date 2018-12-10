@@ -1,0 +1,336 @@
+From 8bb21e9f435ce03525cc29b356aadae62f4ad51e Mon Sep 17 00:00:00 2001
+From: Koen Kooi <koen.kooi@linaro.org>
+Date: Fri, 30 Nov 2018 08:40:00 +0100
+Subject: [PATCH] mesa: switch to meson, DOES NOT WORK
+
+Signed-off-by: Koen Kooi <koen.kooi@linaro.org>
+---
+ .../0397c4c29883d1eb0ac3c080fca798f1564ee5d2.patch | 156 ---------------------
+ recipes-graphics/mesa/files/mako.patch             |  18 +++
+ recipes-graphics/mesa/mesa-lima.inc                |  55 +++++---
+ recipes-graphics/mesa/mesa-lima_git.bb             |   2 +
+ 4 files changed, 53 insertions(+), 178 deletions(-)
+ delete mode 100644 recipes-graphics/mesa/files/0397c4c29883d1eb0ac3c080fca798f1564ee5d2.patch
+ create mode 100644 recipes-graphics/mesa/files/mako.patch
+
+diff --git a/recipes-graphics/mesa/files/0397c4c29883d1eb0ac3c080fca798f1564ee5d2.patch b/recipes-graphics/mesa/files/0397c4c29883d1eb0ac3c080fca798f1564ee5d2.patch
+deleted file mode 100644
+index 63d5179..0000000
+--- a/recipes-graphics/mesa/files/0397c4c29883d1eb0ac3c080fca798f1564ee5d2.patch
++++ /dev/null
+@@ -1,156 +0,0 @@
+-From 0397c4c29883d1eb0ac3c080fca798f1564ee5d2 Mon Sep 17 00:00:00 2001
+-From: Andreas Baierl <ichgeh@imkreisrum.de>
+-Date: Wed, 31 Oct 2018 18:11:23 +0100
+-Subject: [PATCH] WIP: Add gl_FragCoord
+-
+-Imho this is still not correct, but at least shows some output with glmark's
+-conditionals scene.
+----
+- src/gallium/drivers/lima/ir/pp/codegen.c       | 11 +++++++++--
+- src/gallium/drivers/lima/ir/pp/lower.c         |  2 +-
+- src/gallium/drivers/lima/ir/pp/nir.c           | 12 ++++++++++++
+- src/gallium/drivers/lima/ir/pp/node.c          |  7 +++++++
+- src/gallium/drivers/lima/ir/pp/node_to_instr.c |  7 ++++++-
+- src/gallium/drivers/lima/ir/pp/ppir.h          |  1 +
+- src/gallium/drivers/lima/lima_screen.c         |  3 +++
+- 7 files changed, 39 insertions(+), 4 deletions(-)
+-
+-diff --git a/src/gallium/drivers/lima/ir/pp/codegen.c b/src/gallium/drivers/lima/ir/pp/codegen.c
+-index 766b9bc367..c369f15233 100644
+---- a/src/gallium/drivers/lima/ir/pp/codegen.c
+-+++ b/src/gallium/drivers/lima/ir/pp/codegen.c
+-@@ -54,7 +54,9 @@ static void ppir_codegen_encode_varying(ppir_node *node, void *code)
+-    int num_components = load->num_components;
+- 
+-    if (num_components) {
+--      assert(node->op == ppir_op_load_varying || node->op == ppir_op_load_coords);
+-+      assert(node->op == ppir_op_load_varying ||
+-+             node->op == ppir_op_load_coords ||
+-+             node->op == ppir_op_load_fragcoords);
+- 
+-       f->imm.dest = index >> 2;
+-       f->imm.mask = dest->write_mask << (index & 0x3);
+-@@ -67,9 +69,14 @@ static void ppir_codegen_encode_varying(ppir_node *node, void *code)
+-          f->imm.index = load->index >> 2;
+-       else
+-          f->imm.index = load->index >> alignment;
+-+
+-+      if (node->op == ppir_op_load_fragcoords) {
+-+         f->imm.source_type = 2;
+-+         f->imm.perspective = 3;
+-+      }
+-    }
+-    else {
+--      assert(node->op == ppir_op_load_coords);
+-+      assert(node->op == ppir_op_load_coords || node->op == ppir_op_load_fragcoords);
+- 
+-       f->reg.dest = index >> 2;
+-       f->reg.mask = dest->write_mask << (index & 0x3);
+-diff --git a/src/gallium/drivers/lima/ir/pp/lower.c b/src/gallium/drivers/lima/ir/pp/lower.c
+-index 3892bfcecf..b5f8123886 100644
+---- a/src/gallium/drivers/lima/ir/pp/lower.c
+-+++ b/src/gallium/drivers/lima/ir/pp/lower.c
+-@@ -270,7 +270,7 @@ static bool ppir_lower_texture(ppir_block *block, ppir_node *node)
+-          /* If ldtex is the only successor of load_varying node
+-           * we're good. Just change load_varying op type to load_coords.
+-           */
+--         if (ppir_node_has_single_succ(pred)) {
+-+      if (ppir_node_has_single_succ(pred)) {
+-             pred->op = ppir_op_load_coords;
+-             return true;
+-          }
+-diff --git a/src/gallium/drivers/lima/ir/pp/nir.c b/src/gallium/drivers/lima/ir/pp/nir.c
+-index 3c22857d08..9290b5e070 100644
+---- a/src/gallium/drivers/lima/ir/pp/nir.c
+-+++ b/src/gallium/drivers/lima/ir/pp/nir.c
+-@@ -223,6 +223,18 @@ static ppir_node *ppir_emit_intrinsic(ppir_block *block, nir_instr *ni)
+-       lnode->index = nir_intrinsic_base(instr) * 4 + nir_intrinsic_component(instr);
+-       return &lnode->node;
+- 
+-+   case nir_intrinsic_load_frag_coord:
+-+      if (!instr->dest.is_ssa)
+-+         mask = u_bit_consecutive(0, instr->num_components);
+-+
+-+      lnode = ppir_node_create_dest(block, ppir_op_load_fragcoords, &instr->dest, mask);
+-+      if (!lnode)
+-+         return NULL;
+-+
+-+      lnode->num_components = instr->num_components;
+-+      lnode->index = nir_intrinsic_base(instr);
+-+      return &lnode->node;
+-+
+-    case nir_intrinsic_load_uniform:
+-       if (!instr->dest.is_ssa)
+-          mask = u_bit_consecutive(0, instr->num_components);
+-diff --git a/src/gallium/drivers/lima/ir/pp/node.c b/src/gallium/drivers/lima/ir/pp/node.c
+-index 5a91f4c0d9..6cd88dc4b5 100644
+---- a/src/gallium/drivers/lima/ir/pp/node.c
+-+++ b/src/gallium/drivers/lima/ir/pp/node.c
+-@@ -219,6 +219,13 @@ const ppir_op_info ppir_op_infos[] = {
+-          PPIR_INSTR_SLOT_VARYING, PPIR_INSTR_SLOT_END
+-       },
+-    },
+-+   [ppir_op_load_fragcoords] = {
+-+      .name = "ld_fragcoords",
+-+      .type = ppir_node_type_load,
+-+      .slots = (int []) {
+-+         PPIR_INSTR_SLOT_VARYING, PPIR_INSTR_SLOT_END
+-+      },
+-+   },
+-    [ppir_op_load_uniform] = {
+-       .name = "ld_uni",
+-       .type = ppir_node_type_load,
+-diff --git a/src/gallium/drivers/lima/ir/pp/node_to_instr.c b/src/gallium/drivers/lima/ir/pp/node_to_instr.c
+-index 43ced57cdd..65d09394d4 100644
+---- a/src/gallium/drivers/lima/ir/pp/node_to_instr.c
+-+++ b/src/gallium/drivers/lima/ir/pp/node_to_instr.c
+-@@ -168,7 +168,8 @@ static bool insert_to_each_succ_instr(ppir_block *block, ppir_node *node)
+-       dup->instr_pos = node->instr_pos;
+-       ppir_node_replace_pred(dep, dup);
+- 
+--      if (node->op == ppir_op_load_uniform) {
+-+      if (node->op == ppir_op_load_uniform ||
+-+          node->op == ppir_op_load_fragcoords) {
+-          ppir_load_node *load = ppir_node_to_load(node);
+-          ppir_load_node *dup_load = ppir_node_to_load(dup);
+-          dup_load->dest = load->dest;
+-@@ -227,6 +228,10 @@ static bool ppir_do_node_to_instr(ppir_block *block, ppir_node *node)
+-          if (!create_new_instr(block, node))
+-             return false;
+-       }
+-+      else if (node->op == ppir_op_load_fragcoords) {
+-+         if (!insert_to_each_succ_instr(block, node))
+-+            return false;
+-+      }
+-       else if (node->op == ppir_op_load_coords) {
+-          ppir_node *ldtex = ppir_node_first_succ(node);
+-          if (!insert_to_load_tex(block, node, ldtex))
+-diff --git a/src/gallium/drivers/lima/ir/pp/ppir.h b/src/gallium/drivers/lima/ir/pp/ppir.h
+-index bcc335ac38..cd94076755 100644
+---- a/src/gallium/drivers/lima/ir/pp/ppir.h
+-+++ b/src/gallium/drivers/lima/ir/pp/ppir.h
+-@@ -101,6 +101,7 @@ typedef enum {
+-    ppir_op_load_uniform,
+-    ppir_op_load_varying,
+-    ppir_op_load_coords,
+-+   ppir_op_load_fragcoords,
+-    ppir_op_load_texture,
+- 
+-    ppir_op_store_temp,
+-diff --git a/src/gallium/drivers/lima/lima_screen.c b/src/gallium/drivers/lima/lima_screen.c
+-index 8fea9f09c3..d21859cda0 100644
+---- a/src/gallium/drivers/lima/lima_screen.c
+-+++ b/src/gallium/drivers/lima/lima_screen.c
+-@@ -123,6 +123,9 @@ lima_screen_get_param(struct pipe_screen *pscreen, enum pipe_cap param)
+-    case PIPE_CAP_TGSI_FS_COORD_PIXEL_CENTER_HALF_INTEGER:
+-       return 1;
+- 
+-+   case PIPE_CAP_TGSI_FS_POSITION_IS_SYSVAL:
+-+      return 1;
+-+
+-    case PIPE_CAP_MAX_TEXTURE_2D_LEVELS:
+-       return LIMA_MAX_MIP_LEVELS;
+- 
+--- 
+-2.18.1
+-
+diff --git a/recipes-graphics/mesa/files/mako.patch b/recipes-graphics/mesa/files/mako.patch
+new file mode 100644
+index 0000000..e06ef99
+--- /dev/null
++++ b/recipes-graphics/mesa/files/mako.patch
+@@ -0,0 +1,18 @@
++diff --git a/meson.build b/meson.build
++index 672a962..9654a06 100644
++--- a/meson.build
+++++ b/meson.build
++@@ -709,10 +709,10 @@ if with_platform_haiku
++   pre_args += '-DHAVE_HAIKU_PLATFORM'
++ endif
++ 
++-prog_python2 = find_program('python2')
++-has_mako = run_command(prog_python2, '-c', 'import mako')
+++prog_python2 = find_program('python3')
+++has_mako = run_command(prog_python2, '-c', 'import mako')
++ if has_mako.returncode() != 0
++-  error('Python (2.x) mako module required to build mesa.')
+++  error('Python (3.x) mako module required to build mesa.')
++ endif
++ 
++ if cc.get_id() == 'gcc' and cc.version().version_compare('< 4.4.6')
+diff --git a/recipes-graphics/mesa/mesa-lima.inc b/recipes-graphics/mesa/mesa-lima.inc
+index c0a4e95..57ffda1 100644
+--- a/recipes-graphics/mesa/mesa-lima.inc
++++ b/recipes-graphics/mesa/mesa-lima.inc
+@@ -14,7 +14,7 @@ LIC_FILES_CHKSUM = "file://docs/license.html;md5=725f991a1cc322aa7a0cd3a2016621c
+ 
+ PE = "2"
+ 
+-DEPENDS = "expat makedepend-native flex-native bison-native libxml2-native zlib chrpath-replacement-native python-mako-native"
++DEPENDS = "expat makedepend-native flex-native bison-native libxml2-native zlib chrpath-replacement-native python3-mako-native"
+ EXTRANATIVEPATH += "chrpath-native"
+ PROVIDES = " \
+     ${@bb.utils.contains('PACKAGECONFIG', 'opengl', 'virtual/libgl', '', d)} \
+@@ -24,7 +24,7 @@ PROVIDES = " \
+     virtual/mesa \
+     "
+ 
+-inherit autotools pkgconfig pythonnative gettext distro_features_check
++inherit pythonnative meson pkgconfig gettext distro_features_check 
+ 
+ ANY_OF_DISTRO_FEATURES = "opengl vulkan"
+ 
+@@ -33,11 +33,20 @@ PLATFORMS ??= "${@bb.utils.filter('PACKAGECONFIG', 'x11 wayland', d)} \
+ 
+ export LLVM_CONFIG = "${STAGING_BINDIR_NATIVE}/llvm-config${MESA_LLVM_RELEASE}"
+ export YOCTO_ALTERNATE_EXE_PATH = "${STAGING_LIBDIR}/llvm${MESA_LLVM_RELEASE}/llvm-config"
+-EXTRA_OECONF = "--disable-debug \
+-                --enable-shared-glapi \
+-                --disable-opencl \
+-                --with-llvm-prefix=${STAGING_LIBDIR}/llvm${MESA_LLVM_RELEASE} \
+-                --with-platforms='${PLATFORMS}'"
++EXTRA_MESON = " \
++		-Dgallium-extra-hud=false \
++		-Dgallium-omx=disabled \
++		-Dgallium-nine=false \
++		-Dshader-cache=true \
++		-Dglvnd=false \
++		-Dasm=true \
++		-Dselinux=false \
++		-Dshared-glapi=true \
++		-Dgallium-opencl=disabled \
++                -Dplatforms='${PLATFORMS}'"
++
++
++#                --with-llvm-prefix=${STAGING_LIBDIR}/llvm${MESA_LLVM_RELEASE} 
+ 
+ PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'wayland vulkan', d)} \
+                    ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'opengl egl gles gbm dri', '', d)} \
+@@ -46,35 +55,37 @@ PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'wayland vulkan', d)} \
+ 		   "
+ 
+ # "gbm" requires "dri", "opengl"
+-PACKAGECONFIG[gbm] = "--enable-gbm,--disable-gbm"
++PACKAGECONFIG[gbm] = "-Dgbm=true,-Dgbm=false"
++
++PACKAGECONFIG[lmsensors] = "-Dlmsensors=true,-Dlmsensors=false,lmsensors"
+ 
+ X11_DEPS = "xf86driproto glproto virtual/libx11 libxext libxxf86vm libxdamage libxfixes libxrandr"
+ # "x11" requires "opengl"
+-PACKAGECONFIG[x11] = "--enable-glx-tls,--disable-glx,${X11_DEPS}"
+-PACKAGECONFIG[xvmc] = "--enable-xvmc,--disable-xvmc,libxvmc"
++PACKAGECONFIG[x11] = "-Dglx=auto,-Dglx=disabled,${X11_DEPS}"
++PACKAGECONFIG[xvmc] = "-Dgallium-xvmc=true,-Dgallium-xvmc=false,libxvmc"
+ PACKAGECONFIG[wayland] = ",,wayland-native wayland libdrm wayland-protocols"
+ 
+ DRIDRIVERS = "swrast"
+ DRIDRIVERS_append_x86 = ",radeon,r200,nouveau,i965,i915"
+ DRIDRIVERS_append_x86-64 = ",radeon,r200,nouveau,i965,i915"
+ # "dri" requires "opengl"
+-PACKAGECONFIG[dri] = "--enable-dri --with-dri-drivers=${DRIDRIVERS}, --disable-dri, dri2proto libdrm"
+-PACKAGECONFIG[dri3] = "--enable-dri3, --disable-dri3, dri3proto presentproto libxshmfence"
++PACKAGECONFIG[dri] = "-Ddri-drivers=${DRIDRIVERS}, -Ddri-drivers=, dri2proto libdrm"
++PACKAGECONFIG[dri3] = "-Ddri3=true, -Ddri3=false, dri3proto presentproto libxshmfence"
+ 
+ # Vulkan drivers need dri3 enabled
+ # radeon could be enabled as well but requires gallium-llvm with llvm >= 3.9
+ VULKAN_DRIVERS = ""
+ VULKAN_DRIVERS_append_x86 = ",intel"
+ VULKAN_DRIVERS_append_x86-64 = ",intel"
+-PACKAGECONFIG[vulkan] = "--with-vulkan-drivers=${VULKAN_DRIVERS}, --without-vulkan-drivers, python3-mako-native"
++PACKAGECONFIG[vulkan] = "-Dvulkan-drivers=${VULKAN_DRIVERS}, -Dvulkan-drivers=, python3-mako-native"
+ 
+-PACKAGECONFIG[opengl] = "--enable-opengl, --disable-opengl"
++PACKAGECONFIG[opengl] = "-Dopengl=true, -Dopengl=false"
+ 
+ # "gles" requires "opengl"
+-PACKAGECONFIG[gles] = "--enable-gles1 --enable-gles2, --disable-gles1 --disable-gles2"
++PACKAGECONFIG[gles] = "-Dgles1=true -Dgles2=true, -Dgles1=false -Dgles2=true"
+ 
+ # "egl" requires "dri", "opengl"
+-PACKAGECONFIG[egl] = "--enable-egl, --disable-egl"
++PACKAGECONFIG[egl] = "-Degl=true, -Degl=false"
+ 
+ PACKAGECONFIG[etnaviv] = ""
+ PACKAGECONFIG[imx] = ""
+@@ -89,17 +100,17 @@ GALLIUMDRIVERS_LLVM = "r300,svga,nouveau${@',${GALLIUMDRIVERS_LLVM33}' if ${GALL
+ GALLIUMDRIVERS_append_x86 = "${@bb.utils.contains('PACKAGECONFIG', 'gallium-llvm', ',${GALLIUMDRIVERS_LLVM}', '', d)}"
+ GALLIUMDRIVERS_append_x86-64 = "${@bb.utils.contains('PACKAGECONFIG', 'gallium-llvm', ',${GALLIUMDRIVERS_LLVM}', '', d)}"
+ # keep --with-gallium-drivers separate, because when only one of gallium versions is enabled, other 2 were adding --without-gallium-drivers
+-PACKAGECONFIG[gallium]      = "--enable-texture-float --with-gallium-drivers=${GALLIUMDRIVERS}, --without-gallium-drivers"
++PACKAGECONFIG[gallium]      = "-Dgallium-drivers=${GALLIUMDRIVERS}, -Dgallium-drivers="
+ MESA_LLVM_RELEASE ?= "5.0"
+-PACKAGECONFIG[gallium-llvm] = "--enable-llvm --enable-llvm-shared-libs, --disable-llvm, llvm${MESA_LLVM_RELEASE} llvm-native \
++PACKAGECONFIG[gallium-llvm] = "-Dllvm=true, -Dllvm=false, llvm${MESA_LLVM_RELEASE} llvm-native \
+                                ${@'elfutils' if ${GALLIUMDRIVERS_LLVM33_ENABLED} else ''}"
+ export WANT_LLVM_RELEASE = "${MESA_LLVM_RELEASE}"
+-PACKAGECONFIG[xa]  = "--enable-xa, --disable-xa"
++PACKAGECONFIG[xa]  = "-Dgallium-xa=true, -Dgallium-xa=false"
+ 
+-OSMESA = "${@bb.utils.contains('PACKAGECONFIG', 'gallium', 'gallium-osmesa', 'osmesa', d)}"
+-PACKAGECONFIG[osmesa] = "--enable-${OSMESA},--disable-${OSMESA}"
++OSMESA = "${@bb.utils.contains('PACKAGECONFIG', 'gallium', 'gallium', 'classic', d)}"
++PACKAGECONFIG[osmesa] = "-Dosmesa=${OSMESA},-Dosmesa=none"
+ 
+-PACKAGECONFIG[unwind] = "--enable-libunwind,--disable-libunwind,libunwind"
++PACKAGECONFIG[unwind] = "-Dlibunwind=true,-Dlibunwind=false,libunwind"
+ 
+ # llvmpipe is slow if compiled with -fomit-frame-pointer (e.g. -O2)
+ FULL_OPTIMIZATION_append = " -fno-omit-frame-pointer"
+diff --git a/recipes-graphics/mesa/mesa-lima_git.bb b/recipes-graphics/mesa/mesa-lima_git.bb
+index 2f0ab51..f9026b9 100644
+--- a/recipes-graphics/mesa/mesa-lima_git.bb
++++ b/recipes-graphics/mesa/mesa-lima_git.bb
+@@ -64,6 +64,8 @@ SRC_URI = "git://gitlab.freedesktop.org/mesa/mesa.git;protocol=https;branch=18.2
+            file://lima/0053-lima-in-case-index_size-is-an-expression.patch \
+            file://lima/0054-lima-fix-glxgears-hang.patch \
+            file://lima/0055-lima-fix-gp-pending-uniform-at-wrong-offset.patch \
++           \
++           file://mako.patch \
+           "
+ 
+ PV = "18.2.6+git${SRCPV}"
+-- 
+2.9.5
+
