@@ -3,7 +3,7 @@ require ${PN}.inc
 PATCHTOOL = "git"
 PATCH_COMMIT_FUNCTIONS = "1"
 
-SRC_URI = "git://gitlab.freedesktop.org/mesa/mesa.git;protocol=https;branch=18.2 \
+SRC_URI = "git://gitlab.freedesktop.org/mesa/mesa.git;protocol=https;branch=18.3 \
            file://0001-Makefile.vulkan.am-explictly-add-lib-expat-to-intel-.patch \
            file://0003-winsys-svga-drm-Include-sys-types.h.patch \
            file://0004-hardware-gloat.patch \
@@ -71,10 +71,18 @@ SRC_URI = "git://gitlab.freedesktop.org/mesa/mesa.git;protocol=https;branch=18.2
            file://lima/0060-lima-distinguish-RGBA-and-RGBX-texture.patch \
            file://lima/0061-lima-fix-framebuffer-shift_w-h-max-calculation.patch \
            file://lima/0062-lima-move-shift_w-h-max-into-conditional-update.patch \
+           file://lima/0063-lima-ppir-fix-load-coord-from-const-node-crash-v2.patch \
+           file://lima/0064-lima-port-to-18.3.patch \
+           file://lima/0065-lima-use-u_pipe_screen_get_param_defaults-helper.patch \
+           file://lima/0066-lima-exit-when-wait-fence-error.patch \
+           file://lima/0067-lima-ppir-codegen-fix-combine-instruction-dest_modif.patch \
+           file://lima/0068-lima-fix-gp-pp-mmu-fault.patch \
+           file://lima/0069-lima-fix-const-lowering-when-gbm-surface.patch \
+           file://lima/0070-lima-reset-PIPE_CAP_PREFER_BLIT_BASED_TEXTURE_TRANSF.patch \
           "
 
-PV = "18.2.6+git${SRCPV}"
-SRCREV = "cfd1f8b92cae9dde3e5bed42109b5142f50a2ee5"
+PV = "18.3.0+git${SRCPV}"
+SRCREV = "d81beab96afb403915805435fd4b810a00291b99"
 
 S = "${WORKDIR}/git"
 

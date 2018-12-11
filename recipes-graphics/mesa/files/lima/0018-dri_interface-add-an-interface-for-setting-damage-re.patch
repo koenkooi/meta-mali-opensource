@@ -1,7 +1,7 @@
-From bb730f26bd684fc810c1ab02a225ddd97323c2e3 Mon Sep 17 00:00:00 2001
+From 1bcb04627b446309e5d4e181240f5219a642ecd1 Mon Sep 17 00:00:00 2001
 From: Harish Krupo <harish.krupo.kps@intel.com>
 Date: Wed, 4 Jul 2018 18:22:59 +0530
-Subject: [PATCH 18/62] dri_interface: add an interface for setting damage
+Subject: [PATCH 18/70] dri_interface: add an interface for setting damage
  region
 
 Implementors of this interface provide ability to render only
@@ -13,7 +13,7 @@ Signed-off-by: Harish Krupo <harish.krupo.kps@intel.com>
  1 file changed, 25 insertions(+)
 
 diff --git a/include/GL/internal/dri_interface.h b/include/GL/internal/dri_interface.h
-index 046965f..084c6b3 100644
+index 4b6ede5..98a9ef4 100644
 --- a/include/GL/internal/dri_interface.h
 +++ b/include/GL/internal/dri_interface.h
 @@ -83,6 +83,7 @@ typedef struct __DRI2throttleExtensionRec	__DRI2throttleExtension;

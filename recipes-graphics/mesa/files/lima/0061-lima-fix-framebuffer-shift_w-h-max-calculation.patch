@@ -1,7 +1,7 @@
-From f0cd030d70b97bd0caf06c397c23c2254665089e Mon Sep 17 00:00:00 2001
+From dea12d2dfae1d959da78ad9ae7980385ead171b0 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Tue, 4 Dec 2018 22:08:38 +0800
-Subject: [PATCH 61/62] lima: fix framebuffer shift_w/h/max calculation
+Subject: [PATCH 61/70] lima: fix framebuffer shift_w/h/max calculation
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---

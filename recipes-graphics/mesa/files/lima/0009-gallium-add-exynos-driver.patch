@@ -1,7 +1,7 @@
-From 4a3a741566aada1ea6044ce81fc625f7d2f8b21e Mon Sep 17 00:00:00 2001
+From ffb2bc393309b169d05b12e1ab49e13d6753b067 Mon Sep 17 00:00:00 2001
 From: Simon Shields <simon@lineageos.org>
 Date: Fri, 27 Jul 2018 17:21:26 +0800
-Subject: [PATCH 09/62] gallium: add exynos driver
+Subject: [PATCH 09/70] gallium: add exynos driver
 
 A mesa driver for exynos is defined which will call into lima when 3D
 rendering is requested from it.
@@ -49,10 +49,10 @@ Signed-off-by: Simon Shields <simon@lineageos.org>
  create mode 100644 src/gallium/winsys/exynos/drm/exynos_drm_winsys.c
 
 diff --git a/.travis.yml b/.travis.yml
-index c5ed957..6a49580 100644
+index 9d400d2..5b794ea 100644
 --- a/.travis.yml
 +++ b/.travis.yml
-@@ -161,7 +161,7 @@ matrix:
+@@ -167,7 +167,7 @@ matrix:
          - DRI_LOADERS="--disable-glx --disable-gbm --disable-egl"
          - DRI_DRIVERS=""
          - GALLIUM_ST="--enable-dri --disable-opencl --disable-xa --disable-nine --disable-xvmc --disable-vdpau --disable-va --disable-omx-bellagio --disable-gallium-osmesa"
@@ -98,10 +98,10 @@ index 9dee651..7abf2a9 100644
  
  ACLOCAL_AMFLAGS = -I m4
 diff --git a/configure.ac b/configure.ac
-index 0269a64..2a862b0 100644
+index 66dd30a..f81d562 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1377,7 +1377,7 @@ GALLIUM_DRIVERS_DEFAULT="r300,r600,svga,swrast"
+@@ -1395,7 +1395,7 @@ GALLIUM_DRIVERS_DEFAULT="r300,r600,svga,swrast"
  AC_ARG_WITH([gallium-drivers],
      [AS_HELP_STRING([--with-gallium-drivers@<:@=DIRS...@:>@],
          [comma delimited Gallium drivers list, e.g.
@@ -110,7 +110,7 @@ index 0269a64..2a862b0 100644
          @<:@default=r300,r600,svga,swrast@:>@])],
      [with_gallium_drivers="$withval"],
      [with_gallium_drivers="$GALLIUM_DRIVERS_DEFAULT"])
-@@ -2822,6 +2822,9 @@ if test -n "$with_gallium_drivers"; then
+@@ -2833,6 +2833,9 @@ if test -n "$with_gallium_drivers"; then
          xsun4i)
              HAVE_GALLIUM_SUN4I=yes
              ;;
@@ -120,7 +120,7 @@ index 0269a64..2a862b0 100644
          *)
              AC_MSG_ERROR([Unknown Gallium driver: $driver])
              ;;
-@@ -2863,6 +2866,10 @@ if test "x$HAVE_GALLIUM_LIMA" != xyes -a "x$HAVE_GALLIUM_SUN4I" = xyes  ; then
+@@ -2873,6 +2876,10 @@ if test "x$HAVE_GALLIUM_LIMA" != xyes -a "x$HAVE_GALLIUM_SUN4I" = xyes  ; then
      AC_MSG_ERROR([Building with sun4i requires lima])
  fi
  
@@ -131,7 +131,7 @@ index 0269a64..2a862b0 100644
  detect_old_buggy_llvm() {
      dnl llvm-config may not give the right answer when llvm is a built as a
      dnl single shared library, so we must work the library name out for
-@@ -2972,6 +2979,7 @@ AM_CONDITIONAL(HAVE_GALLIUM_VC4, test "x$HAVE_GALLIUM_VC4" = xyes)
+@@ -2982,6 +2989,7 @@ AM_CONDITIONAL(HAVE_GALLIUM_VC4, test "x$HAVE_GALLIUM_VC4" = xyes)
  AM_CONDITIONAL(HAVE_GALLIUM_VIRGL, test "x$HAVE_GALLIUM_VIRGL" = xyes)
  AM_CONDITIONAL(HAVE_GALLIUM_LIMA, test "x$HAVE_GALLIUM_LIMA" = xyes)
  AM_CONDITIONAL(HAVE_GALLIUM_SUN4I, test "x$HAVE_GALLIUM_SUN4I" = xyes)
@@ -139,7 +139,7 @@ index 0269a64..2a862b0 100644
  
  AM_CONDITIONAL(HAVE_GALLIUM_STATIC_TARGETS, test "x$enable_shared_pipe_drivers" = xno)
  
-@@ -3117,6 +3125,7 @@ AC_CONFIG_FILES([Makefile
+@@ -3127,6 +3135,7 @@ AC_CONFIG_FILES([Makefile
                   src/gallium/drivers/virgl/Makefile
                   src/gallium/drivers/lima/Makefile
                   src/gallium/drivers/sun4i/Makefile
@@ -147,7 +147,7 @@ index 0269a64..2a862b0 100644
                   src/gallium/state_trackers/clover/Makefile
                   src/gallium/state_trackers/dri/Makefile
                   src/gallium/state_trackers/glx/xlib/Makefile
-@@ -3168,6 +3177,7 @@ AC_CONFIG_FILES([Makefile
+@@ -3178,6 +3187,7 @@ AC_CONFIG_FILES([Makefile
                   src/gallium/winsys/virgl/vtest/Makefile
                   src/gallium/winsys/lima/drm/Makefile
                   src/gallium/winsys/sun4i/drm/Makefile
@@ -156,7 +156,7 @@ index 0269a64..2a862b0 100644
                   src/gbm/main/gbm.pc
                   src/glx/Makefile
 diff --git a/src/gallium/Android.mk b/src/gallium/Android.mk
-index d5e35b8..3486e2e 100644
+index 62cd370..42d0981 100644
 --- a/src/gallium/Android.mk
 +++ b/src/gallium/Android.mk
 @@ -49,6 +49,7 @@ SUBDIRS += winsys/etnaviv/drm drivers/etnaviv drivers/renderonly
@@ -183,10 +183,10 @@ index 539de39..0a2d1f0 100644
  SUBDIRS += winsys/sw/null
  
 diff --git a/src/gallium/auxiliary/pipe-loader/pipe_loader_drm.c b/src/gallium/auxiliary/pipe-loader/pipe_loader_drm.c
-index 97f640a..f20614d 100644
+index 9d9f40f..73fc37b 100644
 --- a/src/gallium/auxiliary/pipe-loader/pipe_loader_drm.c
 +++ b/src/gallium/auxiliary/pipe-loader/pipe_loader_drm.c
-@@ -150,6 +150,11 @@ static const struct drm_driver_descriptor driver_descriptors[] = {
+@@ -151,6 +151,11 @@ static const struct drm_driver_descriptor driver_descriptors[] = {
          .create_screen = pipe_sun4i_create_screen,
          .configuration = pipe_default_configuration_query,
      },

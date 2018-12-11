@@ -1,7 +1,7 @@
-From 13795a66c362ec21293a880d3eea776176f56560 Mon Sep 17 00:00:00 2001
+From f04f44feec3f4a97687c653baa5466cd1d614c96 Mon Sep 17 00:00:00 2001
 From: Neil Armstrong <narmstrong@baylibre.com>
 Date: Fri, 27 Jul 2018 17:36:22 +0800
-Subject: [PATCH 10/62] gallium: add meson driver
+Subject: [PATCH 10/70] gallium: add meson driver
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
@@ -37,10 +37,10 @@ Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
  create mode 100644 src/gallium/winsys/meson/drm/meson_drm_winsys.c
 
 diff --git a/.travis.yml b/.travis.yml
-index 6a49580..ebf36a5 100644
+index 5b794ea..5d64692 100644
 --- a/.travis.yml
 +++ b/.travis.yml
-@@ -161,7 +161,7 @@ matrix:
+@@ -167,7 +167,7 @@ matrix:
          - DRI_LOADERS="--disable-glx --disable-gbm --disable-egl"
          - DRI_DRIVERS=""
          - GALLIUM_ST="--enable-dri --disable-opencl --disable-xa --disable-nine --disable-xvmc --disable-vdpau --disable-va --disable-omx-bellagio --disable-gallium-osmesa"
@@ -86,10 +86,10 @@ index 7abf2a9..0d9270a 100644
  
  ACLOCAL_AMFLAGS = -I m4
 diff --git a/configure.ac b/configure.ac
-index 2a862b0..a46de51 100644
+index f81d562..2823559 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1377,7 +1377,7 @@ GALLIUM_DRIVERS_DEFAULT="r300,r600,svga,swrast"
+@@ -1395,7 +1395,7 @@ GALLIUM_DRIVERS_DEFAULT="r300,r600,svga,swrast"
  AC_ARG_WITH([gallium-drivers],
      [AS_HELP_STRING([--with-gallium-drivers@<:@=DIRS...@:>@],
          [comma delimited Gallium drivers list, e.g.
@@ -98,7 +98,7 @@ index 2a862b0..a46de51 100644
          @<:@default=r300,r600,svga,swrast@:>@])],
      [with_gallium_drivers="$withval"],
      [with_gallium_drivers="$GALLIUM_DRIVERS_DEFAULT"])
-@@ -2825,6 +2825,9 @@ if test -n "$with_gallium_drivers"; then
+@@ -2836,6 +2836,9 @@ if test -n "$with_gallium_drivers"; then
          xexynos)
              HAVE_GALLIUM_EXYNOS=yes
              ;;
@@ -108,7 +108,7 @@ index 2a862b0..a46de51 100644
          *)
              AC_MSG_ERROR([Unknown Gallium driver: $driver])
              ;;
-@@ -2870,6 +2873,10 @@ if test "x$HAVE_GALLIUM_LIMA" != xyes -a "X$HAVE_GALLIUM_EXYNOS" = xyes ; then
+@@ -2880,6 +2883,10 @@ if test "x$HAVE_GALLIUM_LIMA" != xyes -a "X$HAVE_GALLIUM_EXYNOS" = xyes ; then
      AC_MSG_ERROR([Building with exynos requires lima])
  fi
  
@@ -119,7 +119,7 @@ index 2a862b0..a46de51 100644
  detect_old_buggy_llvm() {
      dnl llvm-config may not give the right answer when llvm is a built as a
      dnl single shared library, so we must work the library name out for
-@@ -2980,6 +2987,7 @@ AM_CONDITIONAL(HAVE_GALLIUM_VIRGL, test "x$HAVE_GALLIUM_VIRGL" = xyes)
+@@ -2990,6 +2997,7 @@ AM_CONDITIONAL(HAVE_GALLIUM_VIRGL, test "x$HAVE_GALLIUM_VIRGL" = xyes)
  AM_CONDITIONAL(HAVE_GALLIUM_LIMA, test "x$HAVE_GALLIUM_LIMA" = xyes)
  AM_CONDITIONAL(HAVE_GALLIUM_SUN4I, test "x$HAVE_GALLIUM_SUN4I" = xyes)
  AM_CONDITIONAL(HAVE_GALLIUM_EXYNOS, test "x$HAVE_GALLIUM_EXYNOS" = xyes)
@@ -127,7 +127,7 @@ index 2a862b0..a46de51 100644
  
  AM_CONDITIONAL(HAVE_GALLIUM_STATIC_TARGETS, test "x$enable_shared_pipe_drivers" = xno)
  
-@@ -3126,6 +3134,7 @@ AC_CONFIG_FILES([Makefile
+@@ -3136,6 +3144,7 @@ AC_CONFIG_FILES([Makefile
                   src/gallium/drivers/lima/Makefile
                   src/gallium/drivers/sun4i/Makefile
                   src/gallium/drivers/exynos/Makefile
@@ -135,7 +135,7 @@ index 2a862b0..a46de51 100644
                   src/gallium/state_trackers/clover/Makefile
                   src/gallium/state_trackers/dri/Makefile
                   src/gallium/state_trackers/glx/xlib/Makefile
-@@ -3178,6 +3187,7 @@ AC_CONFIG_FILES([Makefile
+@@ -3188,6 +3197,7 @@ AC_CONFIG_FILES([Makefile
                   src/gallium/winsys/lima/drm/Makefile
                   src/gallium/winsys/sun4i/drm/Makefile
                   src/gallium/winsys/exynos/drm/Makefile
@@ -144,7 +144,7 @@ index 2a862b0..a46de51 100644
                   src/gbm/main/gbm.pc
                   src/glx/Makefile
 diff --git a/src/gallium/Android.mk b/src/gallium/Android.mk
-index 3486e2e..1bf56f5 100644
+index 42d0981..5b8c874 100644
 --- a/src/gallium/Android.mk
 +++ b/src/gallium/Android.mk
 @@ -50,6 +50,7 @@ SUBDIRS += winsys/imx/drm
@@ -171,10 +171,10 @@ index 0a2d1f0..85af0f7 100644
  SUBDIRS += winsys/sw/null
  
 diff --git a/src/gallium/auxiliary/pipe-loader/pipe_loader_drm.c b/src/gallium/auxiliary/pipe-loader/pipe_loader_drm.c
-index f20614d..e8f1457 100644
+index 73fc37b..fd1201b 100644
 --- a/src/gallium/auxiliary/pipe-loader/pipe_loader_drm.c
 +++ b/src/gallium/auxiliary/pipe-loader/pipe_loader_drm.c
-@@ -155,6 +155,11 @@ static const struct drm_driver_descriptor driver_descriptors[] = {
+@@ -156,6 +156,11 @@ static const struct drm_driver_descriptor driver_descriptors[] = {
          .create_screen = pipe_exynos_create_screen,
          .configuration = pipe_default_configuration_query,
      },

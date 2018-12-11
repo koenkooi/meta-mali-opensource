@@ -1,7 +1,7 @@
-From 4e775d111eace0e4d708c82cbbd94b5bafb7326b Mon Sep 17 00:00:00 2001
+From f135cf51eee736abc6d52fe944b4cacdb87f74a0 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Mon, 3 Dec 2018 12:52:58 +0800
-Subject: [PATCH 60/62] lima: distinguish RGBA and RGBX texture
+Subject: [PATCH 60/70] lima: distinguish RGBA and RGBX texture
 
 RGBX will always set alpha channel to 1 while
 RGBA will pass orignal alpha channel.

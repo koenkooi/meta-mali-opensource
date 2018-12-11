@@ -1,7 +1,7 @@
-From 20a6a5c7c377cdf9c7426383cff9137d5f82e4f9 Mon Sep 17 00:00:00 2001
+From c45233f50698fd28c1891a6e55c192c1d8d2de35 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Sat, 26 Aug 2017 09:51:26 +0800
-Subject: [PATCH 02/62] nir: add load uniform lower to scalar
+Subject: [PATCH 02/70] nir: add load uniform lower to scalar
 
 This is needed for lima gp compiler.
 
@@ -13,10 +13,10 @@ Signed-off-by: Qiang Yu <yuq825@gmail.com>
  3 files changed, 42 insertions(+), 5 deletions(-)
 
 diff --git a/src/compiler/nir/nir_intrinsics.py b/src/compiler/nir/nir_intrinsics.py
-index d688a57..9ffb922 100644
+index 910f9c3..45c154b 100644
 --- a/src/compiler/nir/nir_intrinsics.py
 +++ b/src/compiler/nir/nir_intrinsics.py
-@@ -515,8 +515,8 @@ def load(name, num_srcs, indices=[], flags=[]):
+@@ -551,8 +551,8 @@ def load(name, num_srcs, indices=[], flags=[]):
      intrinsic("load_" + name, [1] * num_srcs, dest_comp=0, indices=indices,
                flags=flags)
  
@@ -28,10 +28,10 @@ index d688a57..9ffb922 100644
  load("ubo", 2, flags=[CAN_ELIMINATE, CAN_REORDER])
  # src[] = { offset }. const_index[] = { base, component }
 diff --git a/src/compiler/nir/nir_lower_io.c b/src/compiler/nir/nir_lower_io.c
-index 9500a30..a786cf9 100644
+index b3595bb..32e4105 100644
 --- a/src/compiler/nir/nir_lower_io.c
 +++ b/src/compiler/nir/nir_lower_io.c
-@@ -205,7 +205,7 @@ lower_load(nir_intrinsic_instr *intrin, struct lower_io_state *state,
+@@ -203,7 +203,7 @@ lower_load(nir_intrinsic_instr *intrin, struct lower_io_state *state,
     load->num_components = intrin->num_components;
  
     nir_intrinsic_set_base(load, var->data.driver_location);
@@ -41,7 +41,7 @@ index 9500a30..a786cf9 100644
  
     if (load->intrinsic == nir_intrinsic_load_uniform)
 diff --git a/src/compiler/nir/nir_lower_io_to_scalar.c b/src/compiler/nir/nir_lower_io_to_scalar.c
-index f0c2a6a..1128f7f 100644
+index 929761f..c681106 100644
 --- a/src/compiler/nir/nir_lower_io_to_scalar.c
 +++ b/src/compiler/nir/nir_lower_io_to_scalar.c
 @@ -27,8 +27,8 @@

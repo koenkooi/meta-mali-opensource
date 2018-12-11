@@ -1,7 +1,7 @@
-From d5d36cce12b2cce8e70ba1b554bdb9fd36528150 Mon Sep 17 00:00:00 2001
+From 84aec32421c85450e5ffd6a96764136eef3f6be9 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Mon, 19 Feb 2018 21:44:44 +0800
-Subject: [PATCH 03/62] u_dynarray: add util_dynarray_enlarge
+Subject: [PATCH 03/70] u_dynarray: add util_dynarray_enlarge
 
 This is for the case that user only know a max size
 it wants to append to the array and enlarge the array
@@ -13,7 +13,7 @@ Signed-off-by: Qiang Yu <yuq825@gmail.com>
  1 file changed, 15 insertions(+), 4 deletions(-)
 
 diff --git a/src/util/u_dynarray.h b/src/util/u_dynarray.h
-index dcbbc06..a495f48 100644
+index 9bed2b9..c521708 100644
 --- a/src/util/u_dynarray.h
 +++ b/src/util/u_dynarray.h
 @@ -77,11 +77,9 @@ util_dynarray_clear(struct util_dynarray *buf)

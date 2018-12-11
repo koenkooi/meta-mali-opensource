@@ -1,7 +1,7 @@
-From e37f4a072c120d217850a55c8510f6971b3570f7 Mon Sep 17 00:00:00 2001
+From ea9f3f65a8696a854aff5caefca17a01cc47b426 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Thu, 15 Nov 2018 16:02:54 +0800
-Subject: [PATCH 51/62] meson: add lima related build
+Subject: [PATCH 51/70] meson: add lima related build
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---
@@ -24,10 +24,10 @@ Signed-off-by: Qiang Yu <yuq825@gmail.com>
  create mode 100644 src/gallium/winsys/sun4i/drm/meson.build
 
 diff --git a/meson.build b/meson.build
-index ca5538c..cb01769 100644
+index 33f4e5a..7b1e3f5 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -132,7 +132,8 @@ if _drivers.contains('auto')
+@@ -134,7 +134,8 @@ if _drivers.contains('auto')
      elif ['arm', 'aarch64'].contains(host_machine.cpu_family())
        _drivers = [
          'pl111', 'v3d', 'vc4', 'freedreno', 'etnaviv', 'imx', 'nouveau',
@@ -36,8 +36,8 @@ index ca5538c..cb01769 100644
 +        'swrast',
        ]
      else
-       error('Unknown architecture. Please pass -Dgallium-drivers to set driver options. Patches gladly accepted to fix this.')
-@@ -159,6 +160,11 @@ with_gallium_i915 = _drivers.contains('i915')
+       error('Unknown architecture @0@. Please pass -Dgallium-drivers to set driver options. Patches gladly accepted to fix this.'.format(
+@@ -163,6 +164,11 @@ with_gallium_i915 = _drivers.contains('i915')
  with_gallium_svga = _drivers.contains('svga')
  with_gallium_virgl = _drivers.contains('virgl')
  with_gallium_swr = _drivers.contains('swr')
@@ -49,7 +49,7 @@ index ca5538c..cb01769 100644
  
  with_gallium = _drivers.length() != 0 and _drivers != ['']
  
-@@ -205,6 +211,9 @@ endif
+@@ -213,6 +219,9 @@ endif
  if with_gallium_tegra and not with_gallium_nouveau
    error('tegra driver requires nouveau driver')
  endif
@@ -60,7 +60,7 @@ index ca5538c..cb01769 100644
  if host_machine.system() == 'darwin'
    with_dri_platform = 'apple'
 diff --git a/meson_options.txt b/meson_options.txt
-index 5bb560b..adcaf2a 100644
+index a1d5ab0..8b60af0 100644
 --- a/meson_options.txt
 +++ b/meson_options.txt
 @@ -60,7 +60,7 @@ option(
@@ -206,7 +206,7 @@ index 561af9d..68f8fa3 100644
    # TODO: this isn't really clover specific, but ATM clover is the only
    # consumer
 diff --git a/src/gallium/targets/dri/meson.build b/src/gallium/targets/dri/meson.build
-index e3202c9..f333276 100644
+index 51940a2..e2448fc 100644
 --- a/src/gallium/targets/dri/meson.build
 +++ b/src/gallium/targets/dri/meson.build
 @@ -58,6 +58,7 @@ libgallium_dri = shared_library(

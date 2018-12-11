@@ -1,7 +1,7 @@
-From 98d9217530ab9031f03a0e2763bb0e733f20acd3 Mon Sep 17 00:00:00 2001
+From 477c2181686c140207add9a9d85cb3b993e502af Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Thu, 28 Jun 2018 09:55:15 +0800
-Subject: [PATCH 14/62] egl,glx: query dri integer to expose
+Subject: [PATCH 14/70] egl,glx: query dri integer to expose
  EGL/GLX_EXT_buffer_age
 
 Add __DRI2_RENDERER_EXPOSE_BUFFER_AGE dri integer query for
@@ -34,10 +34,10 @@ Signed-off-by: Qiang Yu <yuq825@gmail.com>
  13 files changed, 34 insertions(+), 9 deletions(-)
 
 diff --git a/include/GL/internal/dri_interface.h b/include/GL/internal/dri_interface.h
-index c32cdd3..046965f 100644
+index 6f9c2c8..4b6ede5 100644
 --- a/include/GL/internal/dri_interface.h
 +++ b/include/GL/internal/dri_interface.h
-@@ -1876,6 +1876,8 @@ typedef struct __DRIDriverVtableExtensionRec {
+@@ -1877,6 +1877,8 @@ typedef struct __DRIDriverVtableExtensionRec {
  #define   __DRI2_RENDERER_HAS_CONTEXT_PRIORITY_MEDIUM         (1 << 1)
  #define   __DRI2_RENDERER_HAS_CONTEXT_PRIORITY_HIGH           (1 << 2)
  
@@ -47,10 +47,10 @@ index c32cdd3..046965f 100644
  struct __DRI2rendererQueryExtensionRec {
     __DRIextension base;
 diff --git a/src/egl/drivers/dri2/egl_dri2.c b/src/egl/drivers/dri2/egl_dri2.c
-index da7d8b9..2f72d76 100644
+index 4f226b2..28b3745 100644
 --- a/src/egl/drivers/dri2/egl_dri2.c
 +++ b/src/egl/drivers/dri2/egl_dri2.c
-@@ -749,6 +749,9 @@ dri2_setup_screen(_EGLDisplay *disp)
+@@ -753,6 +753,9 @@ dri2_setup_screen(_EGLDisplay *disp)
  
     if (dri2_dpy->flush_control)
        disp->Extensions.KHR_context_flush_control = EGL_TRUE;
@@ -61,10 +61,10 @@ index da7d8b9..2f72d76 100644
  
  void
 diff --git a/src/egl/drivers/dri2/platform_android.c b/src/egl/drivers/dri2/platform_android.c
-index 5c4e5ae..102c58e 100644
+index 1e93ab4..7fec711 100644
 --- a/src/egl/drivers/dri2/platform_android.c
 +++ b/src/egl/drivers/dri2/platform_android.c
-@@ -1444,7 +1444,6 @@ dri2_initialize_android(_EGLDriver *drv, _EGLDisplay *disp)
+@@ -1584,7 +1584,6 @@ dri2_initialize_android(_EGLDriver *drv, _EGLDisplay *disp)
     disp->Extensions.ANDROID_framebuffer_target = EGL_TRUE;
     disp->Extensions.ANDROID_image_native_buffer = EGL_TRUE;
     disp->Extensions.ANDROID_recordable = EGL_TRUE;
@@ -73,10 +73,10 @@ index 5c4e5ae..102c58e 100644
     disp->Extensions.KHR_partial_update = EGL_TRUE;
  #endif
 diff --git a/src/egl/drivers/dri2/platform_drm.c b/src/egl/drivers/dri2/platform_drm.c
-index 35bc4b5..cfe8fa7 100644
+index 68ec832..439827d 100644
 --- a/src/egl/drivers/dri2/platform_drm.c
 +++ b/src/egl/drivers/dri2/platform_drm.c
-@@ -774,8 +774,8 @@ dri2_initialize_drm(_EGLDriver *drv, _EGLDisplay *disp)
+@@ -781,8 +781,8 @@ dri2_initialize_drm(_EGLDriver *drv, _EGLDisplay *disp)
     }
  
     disp->Extensions.KHR_image_pixmap = EGL_TRUE;
@@ -88,10 +88,10 @@ index 35bc4b5..cfe8fa7 100644
  #ifdef HAVE_WAYLAND_PLATFORM
     dri2_dpy->device_name = loader_get_device_name_for_fd(dri2_dpy->fd);
 diff --git a/src/egl/drivers/dri2/platform_wayland.c b/src/egl/drivers/dri2/platform_wayland.c
-index 15eeee5..2f53e5c 100644
+index 817e9b1..04f6b35 100644
 --- a/src/egl/drivers/dri2/platform_wayland.c
 +++ b/src/egl/drivers/dri2/platform_wayland.c
-@@ -1464,8 +1464,6 @@ dri2_initialize_wayland_drm(_EGLDriver *drv, _EGLDisplay *disp)
+@@ -1480,8 +1480,6 @@ dri2_initialize_wayland_drm(_EGLDriver *drv, _EGLDisplay *disp)
     if (!dri2_dpy->is_different_gpu)
        disp->Extensions.WL_create_wayland_buffer_from_image = EGL_TRUE;
  
@@ -101,10 +101,10 @@ index 15eeee5..2f53e5c 100644
  
     /* Fill vtbl last to prevent accidentally calling virtual function during
 diff --git a/src/egl/drivers/dri2/platform_x11.c b/src/egl/drivers/dri2/platform_x11.c
-index cfa5c4a..5233e22 100644
+index 4684c9f..8ac3c03 100644
 --- a/src/egl/drivers/dri2/platform_x11.c
 +++ b/src/egl/drivers/dri2/platform_x11.c
-@@ -1387,7 +1387,6 @@ dri2_initialize_x11_dri3(_EGLDriver *drv, _EGLDisplay *disp)
+@@ -1402,7 +1402,6 @@ dri2_initialize_x11_dri3(_EGLDriver *drv, _EGLDisplay *disp)
        disp->Extensions.KHR_image_pixmap = EGL_TRUE;
     disp->Extensions.NOK_texture_from_pixmap = EGL_TRUE;
     disp->Extensions.CHROMIUM_sync_control = EGL_TRUE;
@@ -157,10 +157,10 @@ index ce60b95..04d1594 100644
  
     free(driverName);
 diff --git a/src/mesa/drivers/dri/i915/intel_screen.c b/src/mesa/drivers/dri/i915/intel_screen.c
-index 882c498..b56139f 100644
+index 2cf7d9d..e32f612 100644
 --- a/src/mesa/drivers/dri/i915/intel_screen.c
 +++ b/src/mesa/drivers/dri/i915/intel_screen.c
-@@ -759,6 +759,9 @@ i915_query_renderer_integer(__DRIscreen *psp, int param, unsigned int *value)
+@@ -754,6 +754,9 @@ i915_query_renderer_integer(__DRIscreen *psp, int param, unsigned int *value)
     case __DRI2_RENDERER_HAS_TEXTURE_3D:
        value[0] = 1;
        return 0;
@@ -171,10 +171,10 @@ index 882c498..b56139f 100644
        return driQueryRendererIntegerCommon(psp, param, value);
     }
 diff --git a/src/mesa/drivers/dri/i965/intel_screen.c b/src/mesa/drivers/dri/i965/intel_screen.c
-index 0dd75cb..1783e17 100644
+index c3bd30f..015ebe4 100644
 --- a/src/mesa/drivers/dri/i965/intel_screen.c
 +++ b/src/mesa/drivers/dri/i965/intel_screen.c
-@@ -1539,6 +1539,9 @@ brw_query_renderer_integer(__DRIscreen *dri_screen,
+@@ -1538,6 +1538,9 @@ brw_query_renderer_integer(__DRIscreen *dri_screen,
     case __DRI2_RENDERER_HAS_FRAMEBUFFER_SRGB:
        value[0] = 1;
        return 0;
@@ -185,7 +185,7 @@ index 0dd75cb..1783e17 100644
        return driQueryRendererIntegerCommon(dri_screen, param, value);
     }
 diff --git a/src/mesa/drivers/dri/nouveau/nouveau_screen.c b/src/mesa/drivers/dri/nouveau/nouveau_screen.c
-index 95b3469..f92d0fc 100644
+index a3be805..93767c6 100644
 --- a/src/mesa/drivers/dri/nouveau/nouveau_screen.c
 +++ b/src/mesa/drivers/dri/nouveau/nouveau_screen.c
 @@ -188,6 +188,9 @@ nouveau_query_renderer_integer(__DRIscreen *psp, int param,
@@ -199,10 +199,10 @@ index 95b3469..f92d0fc 100644
  		return driQueryRendererIntegerCommon(psp, param, value);
  	}
 diff --git a/src/mesa/drivers/dri/radeon/radeon_screen.c b/src/mesa/drivers/dri/radeon/radeon_screen.c
-index 51af452..e32e5fd 100644
+index 6345f2c..a092c9b 100644
 --- a/src/mesa/drivers/dri/radeon/radeon_screen.c
 +++ b/src/mesa/drivers/dri/radeon/radeon_screen.c
-@@ -500,6 +500,9 @@ radeonQueryRendererInteger(__DRIscreen *psp, int param,
+@@ -530,6 +530,9 @@ radeonQueryRendererInteger(__DRIscreen *psp, int param,
     case __DRI2_RENDERER_UNIFIED_MEMORY_ARCHITECTURE:
        value[0] = 0;
        return 0;
@@ -213,7 +213,7 @@ index 51af452..e32e5fd 100644
        return driQueryRendererIntegerCommon(psp, param, value);
     }
 diff --git a/src/mesa/drivers/dri/swrast/swrast.c b/src/mesa/drivers/dri/swrast/swrast.c
-index 4be993a..e53827c 100644
+index 94758e6..839c948 100644
 --- a/src/mesa/drivers/dri/swrast/swrast.c
 +++ b/src/mesa/drivers/dri/swrast/swrast.c
 @@ -178,6 +178,9 @@ swrast_query_renderer_integer(__DRIscreen *psp, int param,

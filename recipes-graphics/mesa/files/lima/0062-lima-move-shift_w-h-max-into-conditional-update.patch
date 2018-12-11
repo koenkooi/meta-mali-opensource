@@ -1,7 +1,7 @@
-From cea7264d8f97545ba5bc1a7c98245d507de8093c Mon Sep 17 00:00:00 2001
+From 0e753d82d1254f2204eeeaddb1b0f8a68621a6f7 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Tue, 4 Dec 2018 22:54:15 +0800
-Subject: [PATCH 62/62] lima: move shift_w/h/max into conditional update
+Subject: [PATCH 62/70] lima: move shift_w/h/max into conditional update
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---
