@@ -81,8 +81,8 @@ SRC_URI = "git://gitlab.freedesktop.org/mesa/mesa.git;protocol=https;branch=18.3
            file://lima/0070-lima-reset-PIPE_CAP_PREFER_BLIT_BASED_TEXTURE_TRANSF.patch \
           "
 
-PV = "18.3.0+git${SRCPV}"
-SRCREV = "d81beab96afb403915805435fd4b810a00291b99"
+PV = "18.3.1+git${SRCPV}"
+SRCREV = "d92c9ba789196978ef2b3b332c3a3737211b5e73"
 
 S = "${WORKDIR}/git"
 
