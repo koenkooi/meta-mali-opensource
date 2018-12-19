@@ -1,0 +1,29 @@
+From e04b2a6d542b2fbfcdac0d294d3c69a59c149748 Mon Sep 17 00:00:00 2001
+From: Qiang Yu <yuq825@gmail.com>
+Date: Fri, 14 Dec 2018 19:54:04 +0800
+Subject: [PATCH 73/73] lima: fix vec3/vec1 varying render state setup
+
+Signed-off-by: Qiang Yu <yuq825@gmail.com>
+---
+ src/gallium/drivers/lima/lima_draw.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/gallium/drivers/lima/lima_draw.c b/src/gallium/drivers/lima/lima_draw.c
+index 4f542f9..b2f4236 100644
+--- a/src/gallium/drivers/lima/lima_draw.c
++++ b/src/gallium/drivers/lima/lima_draw.c
+@@ -1157,9 +1157,9 @@ lima_pack_render_state(struct lima_context *ctx, const struct pipe_draw_info *in
+ 
+          struct lima_varying_info *v = ctx->vs->varying + i;
+          if (v->component_size == 4)
+-            val = v->components == 4 ? 0 : 1;
++            val = v->components > 2 ? 0 : 1;
+          else
+-            val = v->components == 4 ? 2 : 3;
++            val = v->components > 2 ? 2 : 3;
+ 
+          int index = i - 1;
+          if (index < 10)
+-- 
+2.0.1
+

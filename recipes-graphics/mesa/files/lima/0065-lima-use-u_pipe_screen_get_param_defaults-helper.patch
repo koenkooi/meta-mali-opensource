@@ -1,7 +1,7 @@
 From a860690592017fbcf7ea798a869be9c3d573e2da Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Sat, 8 Dec 2018 12:21:50 +0800
-Subject: [PATCH 65/70] lima: use u_pipe_screen_get_param_defaults helper
+Subject: [PATCH 65/73] lima: use u_pipe_screen_get_param_defaults helper
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---

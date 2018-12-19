@@ -1,7 +1,7 @@
 From 794b2f483b2d245cfc4c3d478f0230ecef989516 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Tue, 14 Aug 2018 22:30:10 +0800
-Subject: [PATCH 24/70] lima: mali450 be able to not use dlbu
+Subject: [PATCH 24/73] lima: mali450 be able to not use dlbu
 
 prepare for EGL_KHR_partial_update.
 

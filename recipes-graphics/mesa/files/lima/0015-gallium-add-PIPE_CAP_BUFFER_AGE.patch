@@ -1,7 +1,7 @@
 From 04c646c4c32a77576b10fba214aebcf27081ae9e Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Thu, 28 Jun 2018 10:17:39 +0800
-Subject: [PATCH 15/70] gallium: add PIPE_CAP_BUFFER_AGE
+Subject: [PATCH 15/73] gallium: add PIPE_CAP_BUFFER_AGE
 
 For gallium drivers to expose EGL/GLX_EXT_buffer_age.
 

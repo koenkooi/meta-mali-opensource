@@ -1,7 +1,7 @@
 From 966a221d257d76283a9c999c04ecafa2c65fb291 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Sat, 8 Sep 2018 16:38:04 +0800
-Subject: [PATCH 37/70] lima: move update submit bo to the begin of a
+Subject: [PATCH 37/73] lima: move update submit bo to the begin of a
  draw/clear
 
 To fix the flush not called problem when user read a buffer

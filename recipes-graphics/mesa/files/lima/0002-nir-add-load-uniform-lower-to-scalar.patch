@@ -1,7 +1,7 @@
 From c45233f50698fd28c1891a6e55c192c1d8d2de35 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Sat, 26 Aug 2017 09:51:26 +0800
-Subject: [PATCH 02/70] nir: add load uniform lower to scalar
+Subject: [PATCH 02/73] nir: add load uniform lower to scalar
 
 This is needed for lima gp compiler.
 

@@ -1,7 +1,7 @@
 From ec8455856a48a19303ec0283a15d11e0e75a8976 Mon Sep 17 00:00:00 2001
 From: Andreas Baierl <ichgeh@imkreisrum.de>
 Date: Wed, 14 Nov 2018 16:36:40 +0100
-Subject: [PATCH 49/70] lima/gp: Fix fnot
+Subject: [PATCH 49/73] lima/gp: Fix fnot
 
 Signed-off-by: Andreas Baierl <ichgeh@imkreisrum.de>
 ---

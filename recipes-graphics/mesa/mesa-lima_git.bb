@@ -79,6 +79,9 @@ SRC_URI = "git://gitlab.freedesktop.org/mesa/mesa.git;protocol=https;branch=18.3
            file://lima/0068-lima-fix-gp-pp-mmu-fault.patch \
            file://lima/0069-lima-fix-const-lowering-when-gbm-surface.patch \
            file://lima/0070-lima-reset-PIPE_CAP_PREFER_BLIT_BASED_TEXTURE_TRANSF.patch \
+           file://lima/0071-lima-add-TODO-comments-for-resource-copy.patch \
+           file://lima/0072-lima-ppir-support-nir_op_fsat.patch \
+           file://lima/0073-lima-fix-vec3-vec1-varying-render-state-setup.patch \
           "
 
 PV = "18.3.1+git${SRCPV}"

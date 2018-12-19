@@ -1,7 +1,7 @@
 From f9692879b598becca9c4c558a2a968201e4d4761 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Sat, 1 Dec 2018 09:56:56 +0800
-Subject: [PATCH 57/70] lima: move context.texture_subdata to resource
+Subject: [PATCH 57/73] lima: move context.texture_subdata to resource
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---

@@ -1,0 +1,34 @@
+From cb4e43e656b7e8829a86b9cbcff1432ebb5fb182 Mon Sep 17 00:00:00 2001
+From: Qiang Yu <yuq825@gmail.com>
+Date: Wed, 12 Dec 2018 23:14:20 +0800
+Subject: [PATCH 72/73] lima/ppir: support nir_op_fsat
+
+Signed-off-by: Qiang Yu <yuq825@gmail.com>
+---
+ src/gallium/drivers/lima/ir/pp/nir.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/gallium/drivers/lima/ir/pp/nir.c b/src/gallium/drivers/lima/ir/pp/nir.c
+index 7d7ff0b..3b1ce5d 100644
+--- a/src/gallium/drivers/lima/ir/pp/nir.c
++++ b/src/gallium/drivers/lima/ir/pp/nir.c
+@@ -150,6 +150,7 @@ static int nir_to_ppir_opcodes[nir_num_opcodes] = {
+    [nir_op_fabs] = ppir_op_abs,
+    [nir_op_inot] = ppir_op_not,
+    [nir_op_b2f] = ppir_op_mov,
++   [nir_op_fsat] = ppir_op_mov,
+ };
+ 
+ static ppir_node *ppir_emit_alu(ppir_block *block, nir_instr *ni)
+@@ -169,7 +170,7 @@ static ppir_node *ppir_emit_alu(ppir_block *block, nir_instr *ni)
+ 
+    ppir_dest *pd = &node->dest;
+    nir_alu_dest *nd = &instr->dest;
+-   if (nd->saturate)
++   if (nd->saturate || op == nir_op_fsat)
+       pd->modifier = ppir_outmod_clamp_fraction;
+ 
+    unsigned src_mask;
+-- 
+2.0.1
+

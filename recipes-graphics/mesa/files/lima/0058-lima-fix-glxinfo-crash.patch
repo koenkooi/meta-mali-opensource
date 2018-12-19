@@ -1,7 +1,7 @@
 From 710cfea49c0461361caf2f810987c23aaf13c024 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Sat, 1 Dec 2018 10:22:15 +0800
-Subject: [PATCH 58/70] lima: fix glxinfo crash
+Subject: [PATCH 58/73] lima: fix glxinfo crash
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---

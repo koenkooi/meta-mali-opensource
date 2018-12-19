@@ -1,7 +1,7 @@
 From 22166b948dafa7c22df1c6d7597255fb5c3bac87 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Thu, 6 Dec 2018 20:21:22 +0800
-Subject: [PATCH 66/70] lima: exit when wait fence error
+Subject: [PATCH 66/73] lima: exit when wait fence error
 
 This help we know the last error draw and
 get its command stream dump.

@@ -1,7 +1,7 @@
 From 174bba729dc9057335956af9803bd06811d248f4 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Sun, 18 Jun 2017 00:37:39 +0800
-Subject: [PATCH 01/70] gallium/u_math: add ushort_to_float/float_to_ushort
+Subject: [PATCH 01/73] gallium/u_math: add ushort_to_float/float_to_ushort
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---

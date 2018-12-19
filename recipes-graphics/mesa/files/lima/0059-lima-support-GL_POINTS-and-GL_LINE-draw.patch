@@ -1,7 +1,7 @@
 From 19547d4532443789e602fd2b8f957c1b39d7a254 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Sat, 1 Dec 2018 19:08:33 +0800
-Subject: [PATCH 59/70] lima: support GL_POINTS and GL_LINE* draw
+Subject: [PATCH 59/73] lima: support GL_POINTS and GL_LINE* draw
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---

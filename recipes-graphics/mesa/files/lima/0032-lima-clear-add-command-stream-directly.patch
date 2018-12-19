@@ -1,7 +1,7 @@
 From 2bf8763c9e8e20cb4fc41a74b8da0daaad998b73 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Wed, 5 Sep 2018 14:53:48 +0800
-Subject: [PATCH 32/70] lima: clear add command stream directly
+Subject: [PATCH 32/73] lima: clear add command stream directly
 
 In order to deal with scissor clear (partial clear).
 
