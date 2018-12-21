@@ -1,7 +1,7 @@
 From 3f79e73d0a87e1afabb6cd3bd25931ffffcbd226 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Mon, 10 Dec 2018 16:35:32 +0800
-Subject: [PATCH 68/73] lima: fix gp/pp mmu fault
+Subject: [PATCH 68/74] lima: fix gp/pp mmu fault
 
 Some lima_ctx_buff is allocated conditionally for
 each draw like gp_uniform, pp_uniform and tex_desc.

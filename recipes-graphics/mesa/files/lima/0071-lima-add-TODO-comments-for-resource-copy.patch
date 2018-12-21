@@ -1,7 +1,7 @@
 From 5dba1602c281f725fd6f718b8e3c804bf7b57948 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Tue, 11 Dec 2018 19:13:05 +0800
-Subject: [PATCH 71/73] lima: add TODO comments for resource copy
+Subject: [PATCH 71/74] lima: add TODO comments for resource copy
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---

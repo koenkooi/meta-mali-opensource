@@ -1,7 +1,7 @@
 From 62afbbedf1840ac29d9bfa52ccf5878d454254c1 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Sun, 25 Nov 2018 15:55:38 +0800
-Subject: [PATCH 54/73] lima: fix glxgears hang
+Subject: [PATCH 54/74] lima: fix glxgears hang
 
 glxgears will pass in some invalid draw like
 2 vertex GL_QUARD_STRIP draw which causes GP

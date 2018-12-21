@@ -1,7 +1,7 @@
 From 73770f8ceb00abe0e87012e95b821b43d159192e Mon Sep 17 00:00:00 2001
 From: Erico Nunes <nunes.erico@gmail.com>
 Date: Mon, 2 Apr 2018 19:01:51 +0200
-Subject: [PATCH 04/73] gallium: add a cap to force compute minmax indices
+Subject: [PATCH 04/74] gallium: add a cap to force compute minmax indices
 
 pipe_draw_info has min_index and max_index fields that can be useful in
 indexed drawing, however gallium may decide to not compute them in some

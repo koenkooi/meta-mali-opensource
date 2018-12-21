@@ -1,7 +1,7 @@
 From eec6ad6a1ed77a7450f73aa0a8d436fb4d22b48f Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Fri, 27 Jul 2018 14:19:07 +0800
-Subject: [PATCH 06/73] drm-uapi: add lima_drm.h
+Subject: [PATCH 06/74] drm-uapi: add lima_drm.h
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---

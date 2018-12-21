@@ -1,7 +1,7 @@
 From 476d9eb3c48d1a6676d0c6e4ab2550814e05155f Mon Sep 17 00:00:00 2001
 From: Harish Krupo <harish.krupo.kps@intel.com>
 Date: Sat, 7 Jul 2018 22:56:18 +0530
-Subject: [PATCH 19/73] egl/dri: Use __DRI2_DAMAGE extension for
+Subject: [PATCH 19/74] egl/dri: Use __DRI2_DAMAGE extension for
  KHR_partial_update
 
 Use the DRI2 interface callback to pass the damage rects to

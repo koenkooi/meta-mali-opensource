@@ -1,0 +1,63 @@
+From 02c684c0cc5cd092f3207d5591d734cd1a60097c Mon Sep 17 00:00:00 2001
+From: Arno Messiaen <arnomessiaen@gmail.com>
+Date: Sun, 16 Dec 2018 00:49:44 +0100
+Subject: [PATCH 74/74] lima: extend wrapping possibilities with
+ PIPE_TEX_WRAP_REPEAT and PIPE_TEX_WRAP_CLAMP
+
+Signed-off-by: Arno Messiaen <arnomessiaen@gmail.com>
+---
+ src/gallium/drivers/lima/lima_texture.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/src/gallium/drivers/lima/lima_texture.c b/src/gallium/drivers/lima/lima_texture.c
+index cd39ce7..d0a8215 100644
+--- a/src/gallium/drivers/lima/lima_texture.c
++++ b/src/gallium/drivers/lima/lima_texture.c
+@@ -145,32 +145,40 @@ lima_update_tex_desc(struct lima_context *ctx, struct lima_sampler_state *sample
+       break;
+    }
+ 
+-   /* Only clamp to edge and mirror repeat are supported */
++   /* Only clamp, clamp to edge, repeat and mirror repeat are supported */
+    desc[2] &= ~0xe000;
+    switch (sampler->base.wrap_s) {
+    case PIPE_TEX_WRAP_CLAMP:
++      desc[2] |= 0x4000;
++      break;
+    case PIPE_TEX_WRAP_CLAMP_TO_EDGE:
+    case PIPE_TEX_WRAP_CLAMP_TO_BORDER:
+       desc[2] |= 0x2000;
+       break;
+-   case PIPE_TEX_WRAP_REPEAT:
+    case PIPE_TEX_WRAP_MIRROR_REPEAT:
+       desc[2] |= 0x8000;
+       break;
++   case PIPE_TEX_WRAP_REPEAT:
++   default:
++      break;
+    }
+ 
+-   /* Only clamp to edge and mirror repeat are supported */
++   /* Only clamp, clamp to edge, repeat and mirror repeat are supported */
+    desc[2] &= ~0x070000;
+    switch (sampler->base.wrap_t) {
+    case PIPE_TEX_WRAP_CLAMP:
++      desc[2] |= 0x020000;
++      break;
+    case PIPE_TEX_WRAP_CLAMP_TO_EDGE:
+    case PIPE_TEX_WRAP_CLAMP_TO_BORDER:
+       desc[2] |= 0x010000;
+       break;
+-   case PIPE_TEX_WRAP_REPEAT:
+    case PIPE_TEX_WRAP_MIRROR_REPEAT:
+       desc[2] |= 0x040000;
+       break;
++   case PIPE_TEX_WRAP_REPEAT:
++   default:
++      break;
+    }
+ }
+ 
+-- 
+2.0.1
+

@@ -82,6 +82,7 @@ SRC_URI = "git://gitlab.freedesktop.org/mesa/mesa.git;protocol=https;branch=18.3
            file://lima/0071-lima-add-TODO-comments-for-resource-copy.patch \
            file://lima/0072-lima-ppir-support-nir_op_fsat.patch \
            file://lima/0073-lima-fix-vec3-vec1-varying-render-state-setup.patch \
+           file://lima/0074-lima-extend-wrapping-possibilities-with-PIPE_TEX_WRA.patch \
           "
 
 PV = "18.3.1+git${SRCPV}"

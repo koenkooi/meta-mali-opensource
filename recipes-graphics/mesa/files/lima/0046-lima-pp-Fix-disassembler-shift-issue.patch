@@ -1,7 +1,7 @@
 From 488b1be5aac86cc52e2f6f30438d888058f058fc Mon Sep 17 00:00:00 2001
 From: Andreas Baierl <ichgeh@imkreisrum.de>
 Date: Thu, 8 Nov 2018 15:45:17 +0100
-Subject: [PATCH 46/73] lima/pp: Fix disassembler shift issue
+Subject: [PATCH 46/74] lima/pp: Fix disassembler shift issue
 
 ---
  src/gallium/drivers/lima/ir/pp/disasm.c | 2 +-

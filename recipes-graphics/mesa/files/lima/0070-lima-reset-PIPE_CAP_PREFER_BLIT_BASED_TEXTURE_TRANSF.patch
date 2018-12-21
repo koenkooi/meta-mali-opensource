@@ -1,7 +1,7 @@
 From 2f2ad4e26d3324d0e88e0bfbea98de1b3858b17c Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Mon, 10 Dec 2018 21:15:14 +0800
-Subject: [PATCH 70/73] lima: reset PIPE_CAP_PREFER_BLIT_BASED_TEXTURE_TRANSFER
+Subject: [PATCH 70/74] lima: reset PIPE_CAP_PREFER_BLIT_BASED_TEXTURE_TRANSFER
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---

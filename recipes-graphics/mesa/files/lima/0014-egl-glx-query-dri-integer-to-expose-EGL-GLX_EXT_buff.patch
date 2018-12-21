@@ -1,7 +1,7 @@
 From 477c2181686c140207add9a9d85cb3b993e502af Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Thu, 28 Jun 2018 09:55:15 +0800
-Subject: [PATCH 14/73] egl,glx: query dri integer to expose
+Subject: [PATCH 14/74] egl,glx: query dri integer to expose
  EGL/GLX_EXT_buffer_age
 
 Add __DRI2_RENDERER_EXPOSE_BUFFER_AGE dri integer query for
