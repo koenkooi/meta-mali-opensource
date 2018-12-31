@@ -1,7 +1,7 @@
 From 8e62e51b9af5d5b5c45677840f52d549a98955f0 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Mon, 6 Aug 2018 16:20:01 +0800
-Subject: [PATCH 23/74] lima: add lima_set_damage_region
+Subject: [PATCH 23/77] lima: add lima_set_damage_region
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---

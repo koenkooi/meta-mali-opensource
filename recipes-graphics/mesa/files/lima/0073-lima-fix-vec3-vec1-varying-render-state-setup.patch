@@ -1,7 +1,7 @@
 From e04b2a6d542b2fbfcdac0d294d3c69a59c149748 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Fri, 14 Dec 2018 19:54:04 +0800
-Subject: [PATCH 73/74] lima: fix vec3/vec1 varying render state setup
+Subject: [PATCH 73/77] lima: fix vec3/vec1 varying render state setup
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---

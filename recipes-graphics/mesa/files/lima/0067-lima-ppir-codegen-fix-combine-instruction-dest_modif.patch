@@ -1,7 +1,7 @@
 From ff55dca8b5dbbc7174bb6deac06d8875826c3acd Mon Sep 17 00:00:00 2001
 From: Erico Nunes <nunes.erico@gmail.com>
 Date: Sun, 9 Dec 2018 23:09:35 +0100
-Subject: [PATCH 67/74] lima: ppir: codegen: fix combine instruction
+Subject: [PATCH 67/77] lima: ppir: codegen: fix combine instruction
  dest_modifier
 
 Without this fix, ppir codegen outputs instructions that always write to

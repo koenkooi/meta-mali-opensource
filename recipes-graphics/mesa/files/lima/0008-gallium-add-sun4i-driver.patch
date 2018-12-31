@@ -1,7 +1,7 @@
 From 66ee82ff0ca8302a33584dc10190a97d80ca838f Mon Sep 17 00:00:00 2001
 From: Erico Nunes <nunes.erico@gmail.com>
 Date: Fri, 27 Jul 2018 16:54:34 +0800
-Subject: [PATCH 08/74] gallium: add sun4i driver
+Subject: [PATCH 08/77] gallium: add sun4i driver
 
 A mesa driver for sun4i-drm is defined which will call into lima when 3D
 rendering is requested from it.

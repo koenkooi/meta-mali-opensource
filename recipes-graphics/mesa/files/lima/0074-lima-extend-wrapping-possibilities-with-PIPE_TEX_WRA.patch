@@ -1,7 +1,7 @@
 From 02c684c0cc5cd092f3207d5591d734cd1a60097c Mon Sep 17 00:00:00 2001
 From: Arno Messiaen <arnomessiaen@gmail.com>
 Date: Sun, 16 Dec 2018 00:49:44 +0100
-Subject: [PATCH 74/74] lima: extend wrapping possibilities with
+Subject: [PATCH 74/77] lima: extend wrapping possibilities with
  PIPE_TEX_WRAP_REPEAT and PIPE_TEX_WRAP_CLAMP
 
 Signed-off-by: Arno Messiaen <arnomessiaen@gmail.com>

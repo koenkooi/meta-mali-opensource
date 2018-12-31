@@ -1,7 +1,7 @@
 From cb4e43e656b7e8829a86b9cbcff1432ebb5fb182 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Wed, 12 Dec 2018 23:14:20 +0800
-Subject: [PATCH 72/74] lima/ppir: support nir_op_fsat
+Subject: [PATCH 72/77] lima/ppir: support nir_op_fsat
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---

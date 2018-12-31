@@ -1,7 +1,7 @@
 From 7f640f2e5c0cea617bc803b2ca8db6dbeb9f461d Mon Sep 17 00:00:00 2001
 From: Andreas Baierl <ichgehimkreisrum.de>
 Date: Tue, 23 Oct 2018 09:13:18 +0200
-Subject: [PATCH 42/74] lima/gpir: add fnot op support
+Subject: [PATCH 42/77] lima/gpir: add fnot op support
 
 Signed-off-by: Andreas Baierl <ichgeh@imkreisrum.de>
 ---

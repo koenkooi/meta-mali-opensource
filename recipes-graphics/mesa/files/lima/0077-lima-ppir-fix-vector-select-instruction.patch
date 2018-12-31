@@ -1,0 +1,32 @@
+From 685db617892f9d36edbfa2093c6a74b4859e8714 Mon Sep 17 00:00:00 2001
+From: Qiang Yu <yuq825@gmail.com>
+Date: Sun, 30 Dec 2018 13:09:35 +0800
+Subject: [PATCH 77/77] lima/ppir: fix vector select instruction
+
+condition instruction must be in fmul slot.
+
+Signed-off-by: Qiang Yu <yuq825@gmail.com>
+---
+ src/gallium/drivers/lima/ir/pp/node_to_instr.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/src/gallium/drivers/lima/ir/pp/node_to_instr.c b/src/gallium/drivers/lima/ir/pp/node_to_instr.c
+index 43ced57..d6c1e70 100644
+--- a/src/gallium/drivers/lima/ir/pp/node_to_instr.c
++++ b/src/gallium/drivers/lima/ir/pp/node_to_instr.c
+@@ -196,6 +196,12 @@ static bool ppir_do_node_to_instr(ppir_block *block, ppir_node *node)
+          ppir_node *succ = ppir_node_first_succ(node);
+          if (succ->instr_pos == PPIR_INSTR_SLOT_ALU_VEC_ADD) {
+             node->instr_pos = PPIR_INSTR_SLOT_ALU_VEC_MUL;
++            /* select instr's condition must be inserted to fmul slot */
++            if (succ->op == ppir_op_select &&
++                ppir_node_first_pred(succ) == node) {
++               assert(alu->dest.ssa.num_components == 1);
++               node->instr_pos = PPIR_INSTR_SLOT_ALU_SCL_MUL;
++            }
+             ppir_instr_insert_mul_node(succ, node);
+          }
+          else if (succ->instr_pos == PPIR_INSTR_SLOT_ALU_SCL_ADD &&
+-- 
+2.0.1
+
